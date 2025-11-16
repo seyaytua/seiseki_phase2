@@ -1,0 +1,45 @@
+{
+    "app_name": "評価・評定入力アプリ（ワークフロー型）",
+    "version": "2.0.0",
+    "database": {
+        "path": "C:/Users/T0955290/Desktop/WPy64-31180_v1/VSCode/data/Apps/phase1/data/database.db",
+        "description": "マスタ管理アプリと共通のデータベース"
+    },
+    "import": {
+        "storage_path": "data/imported",
+        "max_preview_rows": 10,
+        "default_header_row": 1
+    },
+    "data_types": [
+        "評定",
+        "観点",
+        "欠課情報"
+    ],
+    "periods": [
+        "前期",
+        "後期",
+        "通年"
+    ],
+    "workflow": {
+        "step1": {
+            "name": "評価・評定データ取り込み",
+            "description": "評定データ（1-10の評価値）を取り込みます"
+        },
+        "step2": {
+            "name": "観点評価データ取り込み",
+            "description": "観点評価（観点1-5）を取り込みます"
+        },
+        "step3": {
+            "name": "未入力者チェック",
+            "description": "評価・観点の未入力者を確認します"
+        },
+        "step4": {
+            "name": "欠課データ前処理",
+            "description": "複数ファイルから欠課データを抽出・集計します"
+        },
+        "step5": {
+            "name": "欠課情報取り込み",
+            "description": "前処理済みの欠課データを取り込みます"
+        }
+    }
+}
