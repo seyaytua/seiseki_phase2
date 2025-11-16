@@ -1,0 +1,13 @@
+{
+    "欠課情報": {
+        "student_number": "student_number",
+        "class_name": "class_name",
+        "attendance_number": "attendance_number",
+        "student_name": "student_name",
+        "absent_count": "absent_count",
+        "course_name": "course_name",
+        "subject_category_number": "subject_category_number",
+        "subject_number": "subject_number",
+        "course_number": "course_number"
+    }
+}

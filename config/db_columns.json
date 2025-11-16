@@ -1,0 +1,17 @@
+{
+  "欠課情報": [
+    {"name": "student_number", "type": "TEXT", "description": "生徒番号"},
+    {"name": "class_name", "type": "TEXT", "description": "組"},
+    {"name": "attendance_number", "type": "INTEGER", "description": "番号"},
+    {"name": "student_name", "type": "TEXT", "description": "氏名"},
+    {"name": "absent_count", "type": "INTEGER", "description": "欠課"},
+    {"name": "course_name", "type": "TEXT", "description": "講座名"},
+    {"name": "subject_category_number", "type": "TEXT", "description": "教科番号"},
+    {"name": "subject_number", "type": "TEXT", "description": "科目番号"},
+    {"name": "course_number", "type": "TEXT", "description": "講座番号"},
+    {"name": "year", "type": "INTEGER", "description": "年度"},
+    {"name": "period", "type": "TEXT", "description": "期間"},
+    {"name": "absence_mark", "type": "TEXT", "description": "欠課略号（処理用）"},
+    {"name": "absence_type", "type": "INTEGER", "description": "欠課区分（処理用）"}
+  ]
+}

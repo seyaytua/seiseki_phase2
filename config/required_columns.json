@@ -1,0 +1,20 @@
+{
+  "grades": [
+    "year",
+    "period",
+    "student_number",
+    "course_number"
+  ],
+  "viewpoint_evaluations": [
+    "year",
+    "period",
+    "student_number",
+    "course_number"
+  ],
+  "absences": [
+    "year",
+    "period",
+    "student_number",
+    "course_number"
+  ]
+}
