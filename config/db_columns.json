@@ -1,4 +1,32 @@
 {
+  "評定": [
+    {"name": "year", "type": "INTEGER", "description": "年度"},
+    {"name": "period", "type": "TEXT", "description": "期間（前期/後期/通年）"},
+    {"name": "student_number", "type": "TEXT", "description": "生徒番号"},
+    {"name": "student_name", "type": "TEXT", "description": "生徒氏名"},
+    {"name": "course_number", "type": "TEXT", "description": "講座番号"},
+    {"name": "course_name", "type": "TEXT", "description": "講座名"},
+    {"name": "school_subject_name", "type": "TEXT", "description": "校内科目名"},
+    {"name": "grade_value", "type": "INTEGER", "description": "評定値（1-10）"},
+    {"name": "credits", "type": "INTEGER", "description": "単位数"},
+    {"name": "acquisition_credits", "type": "INTEGER", "description": "修得単位数"},
+    {"name": "remarks", "type": "TEXT", "description": "備考"}
+  ],
+  "観点": [
+    {"name": "year", "type": "INTEGER", "description": "年度"},
+    {"name": "period", "type": "TEXT", "description": "期間（前期/後期/通年）"},
+    {"name": "student_number", "type": "TEXT", "description": "生徒番号"},
+    {"name": "student_name", "type": "TEXT", "description": "生徒氏名"},
+    {"name": "course_number", "type": "TEXT", "description": "講座番号"},
+    {"name": "course_name", "type": "TEXT", "description": "講座名"},
+    {"name": "school_subject_name", "type": "TEXT", "description": "校内科目名"},
+    {"name": "viewpoint_1", "type": "TEXT", "description": "観点1評価"},
+    {"name": "viewpoint_2", "type": "TEXT", "description": "観点2評価"},
+    {"name": "viewpoint_3", "type": "TEXT", "description": "観点3評価"},
+    {"name": "viewpoint_4", "type": "TEXT", "description": "観点4評価"},
+    {"name": "viewpoint_5", "type": "TEXT", "description": "観点5評価"},
+    {"name": "remarks", "type": "TEXT", "description": "備考"}
+  ],
   "欠課情報": [
     {"name": "student_number", "type": "TEXT", "description": "生徒番号"},
     {"name": "class_name", "type": "TEXT", "description": "組"},
