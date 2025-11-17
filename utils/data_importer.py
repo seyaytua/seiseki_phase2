@@ -83,33 +83,41 @@ class DataImporter:
             # データクリーニング
             df = df.dropna(subset=required_columns)
             
-            # データ挿入
-            count = 0
-            for _, row in df.iterrows():
-                query = """
-                    INSERT OR REPLACE INTO grades (
-                        student_number, student_name, course_number, course_name,
-                        school_subject_name, period, year, grade_value, credits,
-                        acquisition_credits, remarks
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """
-                params = (
-                    row.get('student_number'),
-                    row.get('student_name'),
-                    row.get('course_number'),
-                    row.get('course_name'),
-                    row.get('school_subject_name'),
-                    period,
-                    year,
-                    row.get('grade_value'),
-                    row.get('credits'),
-                    row.get('acquisition_credits'),
-                    row.get('remarks')
-                )
-                self.db.execute_query(query, params)
-                count += 1
+            # period と year を列として追加
+            df = df.copy()
+            df['period'] = period
+            df['year'] = year
             
-            return count
+            # 必要な列のみ選択（テーブル定義と一致させる）
+            columns_order = [
+                'year', 'period', 'student_number', 'student_name',
+                'course_number', 'course_name', 'school_subject_name',
+                'grade_value', 'credits', 'acquisition_credits', 'remarks'
+            ]
+            
+            # 存在しない列は None で埋める
+            for col in columns_order:
+                if col not in df.columns:
+                    df[col] = None
+            
+            df_to_insert = df[columns_order]
+            
+            # 既存データを削除（INSERT OR REPLACE の代替）
+            self.db.execute_query(
+                "DELETE FROM grades WHERE period=? AND year=?",
+                (period, year)
+            )
+            
+            # 一括INSERT
+            df_to_insert.to_sql(
+                'grades',
+                self.db.get_connection(),
+                if_exists='append',
+                index=False,
+                method='multi'
+            )
+            
+            return len(df_to_insert)
             
         except Exception as e:
             print(f"評定データ取り込みエラー: {e}")
@@ -127,35 +135,42 @@ class DataImporter:
             # データクリーニング
             df = df.dropna(subset=required_columns)
             
-            # データ挿入
-            count = 0
-            for _, row in df.iterrows():
-                query = """
-                    INSERT OR REPLACE INTO viewpoint_evaluations (
-                        student_number, student_name, course_number, course_name,
-                        school_subject_name, period, year, viewpoint_1, viewpoint_2,
-                        viewpoint_3, viewpoint_4, viewpoint_5, remarks
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """
-                params = (
-                    row.get('student_number'),
-                    row.get('student_name'),
-                    row.get('course_number'),
-                    row.get('course_name'),
-                    row.get('school_subject_name'),
-                    period,
-                    year,
-                    row.get('viewpoint_1'),
-                    row.get('viewpoint_2'),
-                    row.get('viewpoint_3'),
-                    row.get('viewpoint_4'),
-                    row.get('viewpoint_5'),
-                    row.get('remarks')
-                )
-                self.db.execute_query(query, params)
-                count += 1
+            # period と year を列として追加
+            df = df.copy()
+            df['period'] = period
+            df['year'] = year
             
-            return count
+            # 必要な列のみ選択（テーブル定義と一致させる）
+            columns_order = [
+                'year', 'period', 'student_number', 'student_name',
+                'course_number', 'course_name', 'school_subject_name',
+                'viewpoint_1', 'viewpoint_2', 'viewpoint_3',
+                'viewpoint_4', 'viewpoint_5', 'remarks'
+            ]
+            
+            # 存在しない列は None で埋める
+            for col in columns_order:
+                if col not in df.columns:
+                    df[col] = None
+            
+            df_to_insert = df[columns_order]
+            
+            # 既存データを削除（INSERT OR REPLACE の代替）
+            self.db.execute_query(
+                "DELETE FROM viewpoint_evaluations WHERE period=? AND year=?",
+                (period, year)
+            )
+            
+            # 一括INSERT
+            df_to_insert.to_sql(
+                'viewpoint_evaluations',
+                self.db.get_connection(),
+                if_exists='append',
+                index=False,
+                method='multi'
+            )
+            
+            return len(df_to_insert)
             
         except Exception as e:
             print(f"観点データ取り込みエラー: {e}")
@@ -173,35 +188,41 @@ class DataImporter:
             # データクリーニング
             df = df.dropna(subset=required_columns)
             
-            # データ挿入
-            count = 0
-            for _, row in df.iterrows():
-                query = """
-                    INSERT OR REPLACE INTO absences (
-                        student_number, class_name, attendance_number, student_name,
-                        absent_count, course_name, subject_category_number, subject_number,
-                        course_number, year, period, absence_mark, absence_type
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """
-                params = (
-                    row.get('student_number'),
-                    row.get('class_name'),
-                    row.get('attendance_number'),
-                    row.get('student_name'),
-                    row.get('absent_count'),
-                    row.get('course_name'),
-                    row.get('subject_category_number'),
-                    row.get('subject_number'),
-                    row.get('course_number'),
-                    year,
-                    period,
-                    row.get('absence_mark'),
-                    row.get('absence_type')
-                )
-                self.db.execute_query(query, params)
-                count += 1
+            # period と year を列として追加
+            df = df.copy()
+            df['period'] = period
+            df['year'] = year
             
-            return count
+            # 必要な列のみ選択（テーブル定義と一致させる）
+            columns_order = [
+                'student_number', 'class_name', 'attendance_number', 'student_name',
+                'absent_count', 'course_name', 'subject_category_number', 'subject_number',
+                'course_number', 'year', 'period', 'absence_mark', 'absence_type'
+            ]
+            
+            # 存在しない列は None で埋める
+            for col in columns_order:
+                if col not in df.columns:
+                    df[col] = None
+            
+            df_to_insert = df[columns_order]
+            
+            # 既存データを削除（INSERT OR REPLACE の代替）
+            self.db.execute_query(
+                "DELETE FROM absences WHERE period=? AND year=?",
+                (period, year)
+            )
+            
+            # 一括INSERT
+            df_to_insert.to_sql(
+                'absences',
+                self.db.get_connection(),
+                if_exists='append',
+                index=False,
+                method='multi'
+            )
+            
+            return len(df_to_insert)
             
         except Exception as e:
             print(f"欠課情報取り込みエラー: {e}")
