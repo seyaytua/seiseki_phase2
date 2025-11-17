@@ -159,4 +159,26 @@ class ConfigManager:
     
     def set_last_export_dir(self, directory):
         """最後のエクスポートディレクトリ設定"""
-        self.set_config('paths.last_export_dir', directory)
+        self.set_config('paths.last_export_dir', directory)    
+    def get_settings(self):
+        """settings.jsonファイルを読み込み"""
+        settings_path = self.config_dir / 'settings.json'
+        if settings_path.exists():
+            try:
+                with open(settings_path, 'r', encoding='utf-8-sig') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"settings.json読み込みエラー: {e}")
+                return {}
+        return {}
+    
+    def save_settings(self, settings):
+        """settings.jsonファイルに保存"""
+        settings_path = self.config_dir / 'settings.json'
+        try:
+            with open(settings_path, 'w', encoding='utf-8') as f:
+                json.dump(settings, f, ensure_ascii=False, indent=4)
+            return True
+        except Exception as e:
+            print(f"settings.json保存エラー: {e}")
+            return False

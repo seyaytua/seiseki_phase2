@@ -826,12 +826,15 @@ class MainWindow(QMainWindow):
     
     def show_about(self):
         """バージョン情報表示"""
+        from __version__ import APP_NAME, APP_VERSION, __release_date__, APP_DESCRIPTION
+        
         QMessageBox.about(
             self,
             "バージョン情報",
-            f"{self.settings['app_name']}\n"
-            f"バージョン: {self.settings['version']}\n\n"
-            f"評価・評定データの取り込みと管理を行うアプリケーション\n\n"
+            f"{APP_NAME}\n"
+            f"Version: {APP_VERSION}\n"
+            f"リリース日: {__release_date__}\n\n"
+            f"{APP_DESCRIPTION}\n\n"
             f"使用中のデータベース:\n{self.settings['database']['path']}"
         )
     
