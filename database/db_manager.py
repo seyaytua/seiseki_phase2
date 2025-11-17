@@ -45,22 +45,84 @@ class DatabaseManager:
                 print(f"データベース切断エラー: {e}")
     
     def create_tables(self):
-        """テーブル作成"""
+        """テーブル作成 (db_columns.json の定義に基づく)"""
         try:
             # 評定テーブル
-            self.execute_query(""" CREATE TABLE IF NOT EXISTS grades ( id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT NOT NULL, subject_code TEXT NOT NULL, period TEXT NOT NULL, year INTEGER NOT NULL, grade INTEGER, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(student_id, subject_code, period, year) ) """)
+            self.execute_query("""
+                CREATE TABLE IF NOT EXISTS grades (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    year INTEGER,
+                    period TEXT,
+                    student_number TEXT,
+                    student_name TEXT,
+                    course_number TEXT,
+                    course_name TEXT,
+                    school_subject_name TEXT,
+                    grade_value INTEGER,
+                    credits INTEGER,
+                    acquisition_credits INTEGER,
+                    remarks TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(student_number, course_number, period, year)
+                )
+            """)
             
-            # 観点テーブル
-            self.execute_query(""" CREATE TABLE IF NOT EXISTS viewpoints ( id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT NOT NULL, subject_code TEXT NOT NULL, period TEXT NOT NULL, year INTEGER NOT NULL, viewpoint1 TEXT, viewpoint2 TEXT, viewpoint3 TEXT, viewpoint4 TEXT, viewpoint5 TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(student_id, subject_code, period, year) ) """)
+            # 観点別評価テーブル
+            self.execute_query("""
+                CREATE TABLE IF NOT EXISTS viewpoint_evaluations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    year INTEGER,
+                    period TEXT,
+                    student_number TEXT,
+                    student_name TEXT,
+                    course_number TEXT,
+                    course_name TEXT,
+                    school_subject_name TEXT,
+                    viewpoint_1 TEXT,
+                    viewpoint_2 TEXT,
+                    viewpoint_3 TEXT,
+                    viewpoint_4 TEXT,
+                    viewpoint_5 TEXT,
+                    remarks TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(student_number, course_number, period, year)
+                )
+            """)
             
             # 欠課情報テーブル
-            self.execute_query(""" CREATE TABLE IF NOT EXISTS absences ( id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT NOT NULL, subject_code TEXT NOT NULL, period TEXT NOT NULL, year INTEGER NOT NULL, absence_count INTEGER DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(student_id, subject_code, period, year) ) """)
+            self.execute_query("""
+                CREATE TABLE IF NOT EXISTS absences (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    student_number TEXT,
+                    class_name TEXT,
+                    attendance_number INTEGER,
+                    student_name TEXT,
+                    absent_count INTEGER,
+                    course_name TEXT,
+                    subject_category_number TEXT,
+                    subject_number TEXT,
+                    course_number TEXT,
+                    year INTEGER,
+                    period TEXT,
+                    absence_mark TEXT,
+                    absence_type INTEGER,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(student_number, course_number, period, year)
+                )
+            """)
             
-            # 生徒マスタ
-            self.execute_query(""" CREATE TABLE IF NOT EXISTS students ( id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT UNIQUE NOT NULL, name TEXT, grade INTEGER, class TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ) """)
-            
-            # 科目マスタ
-            self.execute_query(""" CREATE TABLE IF NOT EXISTS subjects ( id INTEGER PRIMARY KEY AUTOINCREMENT, subject_code TEXT UNIQUE NOT NULL, subject_name TEXT NOT NULL, category TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ) """)
+            # 操作ログテーブル
+            self.execute_query("""
+                CREATE TABLE IF NOT EXISTS action_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    action_type TEXT NOT NULL,
+                    description TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
             
         except Exception as e:
             print(f"テーブル作成エラー: {e}")
@@ -118,7 +180,10 @@ class DatabaseManager:
     def table_exists(self, table_name):
         """テーブル存在確認"""
         try:
-            query = """ SELECT name FROM sqlite_master WHERE type='table' AND name=? """
+            query = """
+                SELECT name FROM sqlite_master
+                WHERE type='table' AND name=?
+            """
             result = self.fetch_one(query, (table_name,))
             return result is not None
         except Exception as e:

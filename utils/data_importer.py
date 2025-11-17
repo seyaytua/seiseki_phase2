@@ -86,7 +86,13 @@ class DataImporter:
             # データ挿入
             count = 0
             for _, row in df.iterrows():
-                query = """ INSERT OR REPLACE INTO grades (student_number, student_name, course_number, course_name, school_subject_name, period, year, grade_value, credits, acquisition_credits, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                query = """
+                    INSERT OR REPLACE INTO grades (
+                        student_number, student_name, course_number, course_name,
+                        school_subject_name, period, year, grade_value, credits,
+                        acquisition_credits, remarks
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
                 params = (
                     row.get('student_number'),
                     row.get('student_name'),
@@ -124,7 +130,13 @@ class DataImporter:
             # データ挿入
             count = 0
             for _, row in df.iterrows():
-                query = """ INSERT OR REPLACE INTO viewpoint_evaluations (student_number, student_name, course_number, course_name, school_subject_name, period, year, viewpoint_1, viewpoint_2, viewpoint_3, viewpoint_4, viewpoint_5, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                query = """
+                    INSERT OR REPLACE INTO viewpoint_evaluations (
+                        student_number, student_name, course_number, course_name,
+                        school_subject_name, period, year, viewpoint_1, viewpoint_2,
+                        viewpoint_3, viewpoint_4, viewpoint_5, remarks
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
                 params = (
                     row.get('student_number'),
                     row.get('student_name'),
@@ -150,9 +162,9 @@ class DataImporter:
             raise
     
     def import_absences(self, df, period, year):
-        """欠課情報取り込み"""
+        """欠課情報取り込み (db_columns.json に基づく)"""
         try:
-            required_columns = ['student_number', 'course_number']
+            required_columns = ['student_number']
             
             for col in required_columns:
                 if col not in df.columns:
@@ -164,20 +176,27 @@ class DataImporter:
             # データ挿入
             count = 0
             for _, row in df.iterrows():
-                query = """ INSERT OR REPLACE INTO absences (student_number, student_name, course_number, course_name, school_subject_name, period, year, absent_hours, late_hours, total_hours, absence_rate, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                query = """
+                    INSERT OR REPLACE INTO absences (
+                        student_number, class_name, attendance_number, student_name,
+                        absent_count, course_name, subject_category_number, subject_number,
+                        course_number, year, period, absence_mark, absence_type
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
                 params = (
                     row.get('student_number'),
+                    row.get('class_name'),
+                    row.get('attendance_number'),
                     row.get('student_name'),
-                    row.get('course_number'),
+                    row.get('absent_count'),
                     row.get('course_name'),
-                    row.get('school_subject_name'),
-                    period,
+                    row.get('subject_category_number'),
+                    row.get('subject_number'),
+                    row.get('course_number'),
                     year,
-                    row.get('absent_hours'),
-                    row.get('late_hours'),
-                    row.get('total_hours'),
-                    row.get('absence_rate'),
-                    row.get('remarks')
+                    period,
+                    row.get('absence_mark'),
+                    row.get('absence_type')
                 )
                 self.db.execute_query(query, params)
                 count += 1
